@@ -13,3 +13,8 @@ module.exports = ( sequelize, Sequelize) => {
 
     return Issue;
 };
+
+// ParentIssue
+// Attachment
+// linkedissuedtype
+// linkedissue
