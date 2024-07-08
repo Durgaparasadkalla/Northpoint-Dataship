@@ -9,12 +9,15 @@ module.exports = ( sequelize, Sequelize) => {
         status: { type: Sequelize.STRING, allowNull: false },
         priority: { type: Sequelize.STRING, allowNull: false },
         issueType: { type: Sequelize.STRING, allowNull: false },
+        parentIssueId: { type: Sequelize.STRING, references: { model: 'Issue', key: 'issueId' }, allowNull: true },
+        issueIdAttachment: { type: Sequelize.STRING },
+        comment: { type: Sequelize.STRING },
     });
-
+    Issue.associate = (models) => {
+        Issue.hasMany(models.Attachment, {
+            foreignKey: 'issueId',
+            as: 'attachments'
+        });
+    };
     return Issue;
 };
-
-// ParentIssue
-// Attachment
-// linkedissuedtype
-// linkedissue

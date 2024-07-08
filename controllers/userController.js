@@ -1,17 +1,20 @@
+const { generateUserId } = require("../idGenerator");
 const db = require("../models");
 const User = db.User;
 
 // Create and Save a new User
 const createUser = async (req, res) => {
     try {
-        const { userId, firstName, lastName, email, role, userName, password } = req.body;
+        const { firstName, lastName, mobileNumber, organization, email, role, userName, password } = req.body;
         // Create a Project object
         const user = {
-            userId, 
+            userId: generateUserId(role), 
             firstName, 
             lastName, 
+            mobileNumber,
+            organization,
             email, 
-            role, 
+            role: role || "User", 
             userName, 
             password
         };

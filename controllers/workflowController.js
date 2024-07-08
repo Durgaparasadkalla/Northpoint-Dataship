@@ -1,12 +1,13 @@
+const { generateWorkflowId } = require('../idGenerator');
 const db = require('../models');
 const Workflow = db.Workflow;
 
 // create and save Workflows
 const createWorkflow = async( req, res ) => {
     try{
-        const { workflowId, issueId, status, updatedBy } = req.body;
+        const { issueId, status, updatedBy } = req.body;
         const workflow = {
-            workflowId, 
+            workflowId: generateWorkflowId(), 
             issueId, 
             status, 
             updatedBy

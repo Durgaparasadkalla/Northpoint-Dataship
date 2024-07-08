@@ -26,7 +26,6 @@ db.sequelize = sequelize;
 db.User = require('./user.js')(sequelize, Sequelize);
 db.Project = require('./project.js')(sequelize, Sequelize);
 db.Issue = require('./issue.js')(sequelize, Sequelize);
-db.Comment = require('./comment.js')(sequelize, Sequelize);
 db.IssueHistory = require('./issueHistory.js')(sequelize, Sequelize);
 db.Attachment = require('./attachment.js')(sequelize, Sequelize);
 db.Workflow = require('./workflow.js')(sequelize, Sequelize);
@@ -52,10 +51,6 @@ db.Issue.belongsTo(db.User, { as: 'assignee', foreignKey: 'assigneeUserId' });
 db.Project.hasMany(db.Issue, { foreignKey: 'projectId' });  // One project can have multiple issues
 db.Issue.belongsTo(db.Project, { foreignKey: 'projectId' });  // Each issue belongs to one project
 
-// Issue to Comment associations
-db.Issue.hasMany(db.Comment, { foreignKey: 'issueId' });  // One issue can have multiple comments
-db.Comment.belongsTo(db.Issue, { foreignKey: 'issueId' });  // Each comment belongs to one issue
-
 // Issue to IssueHistory associations
 db.Issue.hasMany(db.IssueHistory, { foreignKey: 'issueId' });  // One issue can have multiple history records
 db.IssueHistory.belongsTo(db.Issue, { foreignKey: 'issueId' });  // Each history record belongs to one issue
@@ -71,10 +66,6 @@ db.Workflow.belongsTo(db.Issue, { foreignKey: 'issueId' });  // Each workflow st
 // Issue to Label associations
 db.Issue.belongsToMany(db.Label, { through: db.IssueLabel, foreignKey: 'issueId' });
 db.Label.belongsToMany(db.Issue, { through: db.IssueLabel, foreignKey: 'labelId' });
-
-// User to Comment associations
-db.User.hasMany(db.Comment, { foreignKey: 'userId' });  // One user can make multiple comments
-db.Comment.belongsTo(db.User, { foreignKey: 'userId' });  // Each comment is made by one user
 
 // User to IssueHistory associations
 db.User.hasMany(db.IssueHistory, { foreignKey: 'userId' });  // One user can make multiple changes (history records)

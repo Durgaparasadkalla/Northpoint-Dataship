@@ -5,24 +5,12 @@ const { createIssue } = require("./controllers/issueController.js");
 const { createLabel } = require("./controllers/labelController.js");
 const { createIssueLabel } = require("./controllers/issueLabelController.js");
 const { createIssueHistory } = require("./controllers/issueHistoryController.js");
-const { createComment } = require("./controllers/commentController.js");
-const { createAttachment, getAttachment } = require("./controllers/attachmentController.js");
+const { getAttachment } = require("./controllers/attachmentController.js");
 const { createWorkflow } = require("./controllers/workflowController.js");
 const router = require("express").Router();
 const multer = require('multer');
-const path = require('path');
 
-// Configure multer storage
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});
-
-const upload = multer({ storage: storage });
+const upload = multer({ dest: 'uploads/' })
 
 // User Controller
 router.post("/user", createUser);
@@ -31,6 +19,7 @@ router.get("/getuserbyid/:userId", getUserById);
 router.post("/login", login);
 
 // Project Controller
+router.post("/project", upload.single('image'), createProject);
 router.post("/project", createProject);
 router.get("/getproject", getProject);
 router.get("/getprojectbyid/:projectId", getProjectById);
@@ -39,7 +28,7 @@ router.get("/getprojectbyid/:projectId", getProjectById);
 router.post("/projectmember", createProjectMember);
 
 // Issue Controller
-router.post("/issue", createIssue);
+router.post("/issue", upload.array('files', 10), createIssue);
 
 // Label Controller
 router.post("/label", createLabel);
@@ -50,11 +39,7 @@ router.post("/issuelabel", createIssueLabel);
 // IssueHistory Controller
 router.post("/issuehistory", createIssueHistory);
 
-// Comment Controller
-router.post("/comment", createComment);
-
 // Attachment Controller
-router.post('/attachment', upload.single('files'), createAttachment);
 router.get("/getattachment", getAttachment);
 
 // Workflow Controller

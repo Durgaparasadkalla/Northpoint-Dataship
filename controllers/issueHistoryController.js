@@ -1,12 +1,13 @@
+const { generateHistoryId } = require('../idGenerator');
 const db = require('../models');
 const IssueHistory = db.IssueHistory;
 
 // create and save Issue History
 const createIssueHistory = async( req, res ) => {
     try{
-        const { historyId, issueId, userId, changeType, oldValue, newValue } = req.body;
+        const { issueId, userId, changeType, oldValue, newValue } = req.body;
         const issueHistory = {
-            historyId, 
+            historyId: generateHistoryId(), 
             issueId, 
             userId, 
             changeType, 

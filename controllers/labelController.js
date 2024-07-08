@@ -1,12 +1,13 @@
+const { generateLabelId } = require('../idGenerator');
 const db = require('../models');
 const Label = db.Label;
 
 // create and save Label
 const createLabel = async( req, res ) => {
     try{
-        const { labelId, labelName } = req.body;
+        const { labelName } = req.body;
         const label = {
-            labelId, 
+            labelId: generateLabelId(), 
             labelName
         };
 
