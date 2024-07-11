@@ -19,11 +19,11 @@ const getAttachment = async( req, res ) => {
   }
 };
 
-// get attachments by attachment id
-const getAttachmentById = async( req, res ) => {
+// get attachments by issue id
+const getAttachmentByIssueId = async( req, res ) => {
   try{
-    const { attachmentId } = req.params;
-    const attachments = await Attachment.findOne({ where: {attachmentId } });
+    const { issueId } = req.params;
+    const attachments = await Attachment.findOne({ where: {issueId} });
     if (!attachments) {
       return res.status(404).json({ message: 'Attachment not found' });
     }
@@ -39,4 +39,4 @@ const getAttachmentById = async( req, res ) => {
 }
 
 
-module.exports = {  getAttachment, getAttachmentById };
+module.exports = {  getAttachment, getAttachmentByIssueId };

@@ -23,5 +23,42 @@ const createIssueLabel = async( req, res ) => {
     }
 };
 
+// get Issue Label data
+const getIssueLabel = async( req, res ) => {
+    try{
+        const issuelabel = await IssueLabel.findAll();
+        if(!issuelabel) {
+            return res.status(404).json({ message: 'Issue Label data not found.' });
+        }
+        return res.status(200).json({
+            issueLabelData: issuelabel,
+            message: 'Issue Label data fetched successfully'
+        })
+    } catch (err) {
+        return res.status(500).json({
+            message: err.message || "Some error occurred while fetching issuelabel."
+        })
+    }
+};
 
-module.exports = { createIssueLabel };
+// get Issue Label data by Issue Id
+const getIssueLabelByIssueId = async( req, res ) => {
+    try{
+        const { issueId } = req.params;
+        const issuelabel = await IssueLabel.findAll({ where: { issueId } });
+        if(!issuelabel) {
+            return res.status(404).json({ message: 'Issue Label data not found.' });
+        }
+        return res.status(200).json({
+            issueLabelData: issuelabel,
+            message: 'Issue Label data fetched successfully'
+        })
+    } catch (err) {
+        return res.status(500).json({
+            message: err.message || "Some error occurred while fetching issuelabel."
+        })
+    }
+};
+
+
+module.exports = { createIssueLabel, getIssueLabel, getIssueLabelByIssueId };

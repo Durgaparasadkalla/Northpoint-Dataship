@@ -17,40 +17,41 @@ const s3 = new S3Client({
     region: Bucket_Region
 });
 
-async function uploadFileToS3(file) {
+async function uploadImageToS3(file) {
     return new Promise(async (resolve, reject) => {
         const fileContent = fs.readFileSync(file.path);
-        const fileName = `${uuidv4()}-${file.originalname}`;
+        const imageName = `${uuidv4()}-${file.originalname}`;
 
         const uploadParams = {
-            Bucket: Bucket_Name,
-            Key: fileName,
+            Bucket: process.env.Bucket_Name,
+            Key: imageName,
             Body: fileContent,
             ACL: 'public-read',
-            ContentType: file.mimetype // Ensure ContentType is set dynamically based on the file type
+            ContentType: file.mimetype
         };
 
         try {
             // Upload the file to S3
             await s3.send(new PutObjectCommand(uploadParams));
-            // Construct the URL for the uploaded file
-            const fileUrl = `https://${Bucket_Name}.s3.${Bucket_Region}.amazonaws.com/${fileName}`;
 
-            resolve(fileUrl);
+            // Construct the presigned URL for the uploaded image
+            const presignedUrl = `https://${process.env.Bucket_Name}.s3.${process.env.Bucket_Region}.amazonaws.com/${imageName}`;
+
+            resolve(presignedUrl);
         } catch (error) {
             reject(error);
         }
     });
-};
+}
 
 // Create and Save a new Project
 const createProject = async (req, res) => {
   try {
       const { projectName, summary, description, leadUserId } = req.body;
 
-      const image = req.file;
-      if (image) {
-        image = await uploadFileToS3(image)
+      const file = req.file;
+      if (file) {
+        image = await uploadImageToS3(file)
       }
 
       // Create a Project object

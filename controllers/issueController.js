@@ -92,17 +92,86 @@ const createIssue = async( req, res ) => {
     }
 };
 
+// get Issue data
+const getIssue = async( req, res ) => {
+    try{
+        const issues = await Issue.findAll();
+        if(!issues) {
+            return res.status(404).json({ message: 'Issue data not found.' });
+        }
+        return res.status(200).json({
+            issueData: issues,
+            message: 'Issue data fetched successfully'
+        })
+    } catch (err) {
+        return res.status(500).json({
+            message: err.message || "Some error occurred while fetching Issues."
+        })
+    }
+};
 
-// const parentIssue = await Issue.findOne({
-//     where: { issueId: parentIssueId }
-// });
+// get Issue data by Id
+const getIssueById = async( req, res ) => {
+    try{
+        const { issueId } = req.params;
+        const issues = await Issue.findOne({ where: {issueId} });
+        if(!issues) {
+            return res.status(404).json({ message: 'Issue data not found.' });
+        }
+        return res.status(200).json({
+            issueData: issues,
+            message: 'Issue data fetched successfully'
+        })
+    } catch (err) {
+        return res.status(500).json({
+            message: err.message || "Some error occurred while fetching Issues."
+        })
+    }
+}
 
-// const childIssues = await Issue.findAll({
-//     where: { parentIssueId: parentIssueId }
-// });
+// get issue data for corresponding parent issue id
+const getIssueByParentId = async (req, res) => {
+    try {
+      const { parentIssueId } = req.params;
+  
+      // Fetch parent issue
+      const parentIssue = await Issue.findOne({
+        where: { issueId: parentIssueId }
+      });
+  
+      // Fetch child issues
+      const childIssues = await Issue.findAll({
+        where: { parentIssueId: parentIssueId }
+      });
+  
+      // Check if parent issue exists
+      if (!parentIssue) {
+        return res.status(404).json({ message: 'Parent Issue Data is missing' });
+      }
+  
+      // Check if there are child issues
+      if (childIssues.length === 0) {
+        return res.status(404).json({ message: 'Child Issue Data is missing' });
+      }
+  
+      // Return the parent and child issues
+      const IssueData = {
+        parentIssue,
+        childIssues
+      };
+  
+      return res.status(200).json({
+        issueData: IssueData,
+        message: 'Issues data fetched successfully'
+        });
+  
+    } catch (err) {
+      return res.status(500).json({
+        message: err.message || "Some error occurred while fetching the issues."
+      });
+    }
+  };
+  
 
-// console.log("Parent Issue:", parentIssue);
-// console.log("Child Issues:", childIssues);
 
-
-module.exports = { createIssue };
+module.exports = { createIssue, getIssue, getIssueById, getIssueByParentId };

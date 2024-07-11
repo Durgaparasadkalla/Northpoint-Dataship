@@ -14,20 +14,14 @@ const rolePrefixes = {
     User: 'USR'
 };
 
-// Simulating a database or storage for user counters by role
-let userCounters = {
-    Admin: 0,
-    ProjectManager: 0,
-    User: 0
-};
+// Initialize a global counter
+let userCounter = 0;
 
 function generateUserId(role) {
-    const currentDate = new Date();
-    const formattedDate = formatDate(currentDate);
-    userCounters[role]++;
+    userCounter++;
 
-    // Generate a custom user ID using prefix, formattedDate, and counter for the role
-    const userId = `${rolePrefixes[role]}-${formattedDate}-${userCounters[role]}`;
+    // Generate a custom user ID using prefix and global counter
+    const userId = `${rolePrefixes[role]}-${userCounter}`;
 
     return userId;
 }
@@ -36,12 +30,10 @@ function generateUserId(role) {
 let projectCounter = 0;
 
 function generateProjectId() {
-    const currentDate = new Date();
-    const formattedDate = formatDate(currentDate);
     projectCounter++; 
 
     // Generate a custom ID using formattedDate and counter
-    const projectId = `P-${formattedDate}-${projectCounter}`;
+    const projectId = `PROJECT-${projectCounter}`;
 
     return projectId;
 }
@@ -50,12 +42,10 @@ function generateProjectId() {
 let issueCounter = 0;
 
 function generateIssueId() {
-    const currentDate = new Date();
-    const formattedDate = formatDate(currentDate);
     issueCounter++; 
 
     // Generate a custom ID using formattedDate and counter
-    const issueId = `I-${formattedDate}-${issueCounter}`;
+    const issueId = `ISSUE-${issueCounter}`;
 
     return issueId;
 }
@@ -64,12 +54,10 @@ function generateIssueId() {
 let labelCounter = 0;
 
 function generateLabelId() {
-    const currentDate = new Date();
-    const formattedDate = formatDate(currentDate);
     labelCounter++; 
 
     // Generate a custom ID using formattedDate and counter
-    const labelId = `L-${formattedDate}-${labelCounter}`;
+    const labelId = `LABEL-${labelCounter}`;
 
     return labelId;
 }
@@ -78,12 +66,10 @@ function generateLabelId() {
 let historyCounter = 0;
 
 function generateHistoryId() {
-    const currentDate = new Date();
-    const formattedDate = formatDate(currentDate);
     historyCounter++; 
 
     // Generate a custom ID using formattedDate and counter
-    const historyId = `H-${formattedDate}-${historyCounter}`;
+    const historyId = `HISTORY-${historyCounter}`;
 
     return historyId;
 }
@@ -92,12 +78,10 @@ function generateHistoryId() {
 let attachmentCounter = 0;
 
 function generateAttachmentId() {
-    const currentDate = new Date();
-    const formattedDate = formatDate(currentDate);
     attachmentCounter++; 
 
     // Generate a custom ID using formattedDate and counter
-    const attachmentId = `A-${formattedDate}-${attachmentCounter}`;
+    const attachmentId = `ATTACHMENT-${attachmentCounter}`;
 
     return attachmentId;
 }
@@ -106,12 +90,10 @@ function generateAttachmentId() {
 let workflowCounter = 0;
 
 function generateWorkflowId() {
-    const currentDate = new Date();
-    const formattedDate = formatDate(currentDate);
     workflowCounter++; 
 
     // Generate a custom ID using formattedDate and counter
-    const workflowId = `W-${formattedDate}-${workflowCounter}`;
+    const workflowId = `WORKFLOW-${workflowCounter}`;
 
     return workflowId;
 }

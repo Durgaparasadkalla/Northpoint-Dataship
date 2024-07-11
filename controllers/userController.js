@@ -62,6 +62,24 @@ const getUserById = async( req, res ) => {
     }
 };
 
+// get User data by Role
+const getUserByRole = async( req, res ) => {
+    try{
+        const { role } = req.params;
+        const userData = await User.findOne({ where: { role } });
+        if(!userData) {
+            return res.status(404).json({ message: 'User Data data not found.' });
+        }
+        return res.status(200).json({
+            UserData: userData,
+            message: 'User data fetched successfully'
+        })
+    } catch (err) {
+        return res.status(500).json({
+            message: err.message || "Some error occurred while fetching User."
+        })
+    }
+};
 
 // login
 const login = async( req, res ) => {
@@ -83,4 +101,4 @@ const login = async( req, res ) => {
 };
 
 
-module.exports = { createUser, getUser, getUserById, login };
+module.exports = { createUser, getUser, getUserById, getUserByRole, login };
