@@ -24,6 +24,81 @@ const createProjectMember = async( req, res ) => {
     }
 };
 
+// get Project Member data
+const getProjectMember = async( req, res ) => {
+    try{
+        const projectmember = await ProjectMember.findAll();
+        if(!projectmember) {
+            return res.status(404).json({ message: 'Project Members data not found.' });
+        }
+        return res.status(200).json({
+            projectMemberData: projectmember,
+            message: 'Project Members data fetched successfully'
+        })
+    } catch (err) {
+        return res.status(500).json({
+            message: err.message || "Some error occurred while fetching Project Members."
+        })
+    }
+};
 
-module.exports = { createProjectMember };
+// get Project Members data by Project Id
+const getMembersByProjectId = async( req, res ) => {
+    try{
+        const { projectId } = req.params;
+        const projectmember = await ProjectMember.findOne({ where: { projectId } });
+        if(!projectmember) {
+            return res.status(404).json({ message: 'Project Members data not found.' });
+        }
+        return res.status(200).json({
+            projectMemberData: projectmember,
+            message: 'Project Members data fetched successfully'
+        })
+    } catch (err) {
+        return res.status(500).json({
+            message: err.message || "Some error occurred while fetching Project Members."
+        })
+    }
+};
+
+// get Project Members data by User Id
+const getMembersByUserId = async( req, res ) => {
+    try{
+        const { projectId, userId } = req.body;
+        const projectmember = await ProjectMember.findOne({ where: { projectId, userId } });
+        if(!projectmember) {
+            return res.status(404).json({ message: 'Project Members data not found.' });
+        }
+        return res.status(200).json({
+            projectMemberData: projectmember,
+            message: 'Project Members data fetched successfully'
+        })
+    } catch (err) {
+        return res.status(500).json({
+            message: err.message || "Some error occurred while fetching Project Members."
+        })
+    }
+};
+
+// get Project Members data by User Role
+const getMembersByUserRole = async( req, res ) => {
+    try{
+        const { projectId, role } = req.body;
+        const projectmember = await ProjectMember.findOne({ where: { projectId, role } });
+        if(!projectmember) {
+            return res.status(404).json({ message: 'Project Members data not found.' });
+        }
+        return res.status(200).json({
+            projectMemberData: projectmember,
+            message: 'Project Members data fetched successfully'
+        })
+    } catch (err) {
+        return res.status(500).json({
+            message: err.message || "Some error occurred while fetching Project Members."
+        })
+    }
+};
+
+
+module.exports = { createProjectMember, getProjectMember, getMembersByProjectId, getMembersByUserId, getMembersByUserRole };
 

@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 8080;
 // app.use(cors());
 
 // Or enable CORS for specific origins
-db.sequelize.sync()
+db.sequelize.sync({ alter: true })
   .then(() => {
     console.log("Synced db.");
   })
