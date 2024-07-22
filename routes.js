@@ -7,6 +7,7 @@ const { createIssueLabel, getIssueLabel, getIssueLabelByIssueId } = require("./c
 const { createIssueHistory, getIssueHistory, getIssueHistoryByIssueId } = require("./controllers/issueHistoryController.js");
 const { getAttachment, getAttachmentByIssueId } = require("./controllers/attachmentController.js");
 const { createWorkflow, getWorkflow, getWorkflowByIssueId, getWorkflowByStatus } = require("./controllers/workflowController.js");
+const { invitationLink, acceptInvitation } = require("./emailContent.js");
 const router = require("express").Router();
 const multer = require('multer');
 
@@ -63,6 +64,9 @@ router.get("/getworkflow", getWorkflow);
 router.get("/getworkflowbyissueid/:issueId", getWorkflowByIssueId);
 router.get("/getworkflowbystatus/:status", getWorkflowByStatus);
 
+// Email 
+router.post("/invite",invitationLink);
+router.get("/inviteaccept/:email",acceptInvitation);
 
 
 module.exports = router;

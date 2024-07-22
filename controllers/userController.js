@@ -1,6 +1,7 @@
 const { generateUserId } = require("../idGenerator");
 const db = require("../models");
 const User = db.User;
+const { welcomeMail } = require("../emailContent");
 
 // Create and Save a new User
 const createUser = async (req, res) => {
@@ -21,6 +22,7 @@ const createUser = async (req, res) => {
 
         // Save User in the database
         const data = await User.create(user);
+        await welcomeMail(data)
         res.json(data);
     } catch (err) {
         res.status(500).json({
