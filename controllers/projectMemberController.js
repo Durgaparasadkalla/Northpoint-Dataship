@@ -1,5 +1,7 @@
 const db = require('../models');
+const User = db.User;
 const ProjectMember = db.ProjectMember;
+const { Op } = require('sequelize');
 
 // create and save Project Mombers
 const createProjectMember = async( req, res ) => {
@@ -99,6 +101,43 @@ const getMembersByUserRole = async( req, res ) => {
     }
 };
 
+// get collaboraters by user credentials
+const getCollaboraters = async( req, res ) => {
+    try{
+        const { userId } = req.params;
+        const userProjects = await ProjectMember.findAll({ where: { userId }, attributes: ['projectId'] });
 
-module.exports = { createProjectMember, getProjectMember, getMembersByProjectId, getMembersByUserId, getMembersByUserRole };
+        const projectIds = userProjects.map(projectMember => projectMember.projectId);
+        console.log('projectIds',projectIds);
+
+        // Exclude the particular user and get collaboraters
+        const projectmembers = await ProjectMember.findAll({
+            where: {
+                projectId: projectIds ,
+                userId: { [Op.ne]: userId }  // In Sequelize, Op is short for Operators. ne - not equal
+            },
+            include: {
+                model: User,
+                attributes: ['firstName', 'lastName']    
+            }
+        });
+        console.log('projectmembers',projectmembers);
+
+        // Combine first and last names
+        const memberNames = [...new Set( projectmembers.map(pm => `${pm.User.firstName} ${pm.User.lastName}`) )];
+
+        return res.status(200).json({
+            projectMembersData: memberNames,
+            message: 'Project Members data fetched successfully'
+        })
+    } catch (err) {
+        return res.status(500).json({
+            message: err.message || "Some error occurred while fetching Project Members."
+            })
+        };
+};
+
+
+
+module.exports = { createProjectMember, getProjectMember, getMembersByProjectId, getMembersByUserId, getMembersByUserRole, getCollaboraters };
 

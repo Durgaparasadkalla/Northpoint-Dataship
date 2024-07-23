@@ -8,6 +8,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     freezeTableName: true, // Prevent Sequelize from modifying table names
   },
   // logging: false, // Disable logging (can enable it for debugging)
+  // logging: console.log,
 
   pool: {
     max: dbConfig.pool.max,
@@ -74,6 +75,9 @@ db.IssueHistory.belongsTo(db.User, { foreignKey: 'userId' });  // Each history r
 // User to Attachment associations
 db.User.hasMany(db.Attachment, { foreignKey: 'uploadedBy' });  // One user can upload multiple attachments
 db.Attachment.belongsTo(db.User, { foreignKey: 'uploadedBy' });  // Each attachment is uploaded by one user
+
+db.ProjectMember.belongsTo(db.User, { foreignKey: 'userId' });
+db.ProjectMember.belongsTo(db.Project, { foreignKey: 'projectId' });
 
 // User to Workflow associations
 db.User.hasMany(db.Workflow, { foreignKey: 'changedBy' });  // One user can change multiple workflow statuses

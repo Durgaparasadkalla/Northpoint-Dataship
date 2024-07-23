@@ -1,7 +1,7 @@
 const { createUser, getUser, getUserById, getUserByRole, login } = require("./controllers/userController.js");
-const { createProject, getProject, getProjectById } = require("./controllers/projectController.js");
-const { createProjectMember, getProjectMember, getMembersByProjectId, getMembersByUserId, getMembersByUserRole } = require("./controllers/projectMemberController.js");
-const { createIssue, getIssue, getIssueById, getIssueByParentId } = require("./controllers/issueController.js");
+const { createProject, getProject, getProjectById, getLatestProjects } = require("./controllers/projectController.js");
+const { createProjectMember, getProjectMember, getMembersByProjectId, getMembersByUserId, getMembersByUserRole, getCollaboraters } = require("./controllers/projectMemberController.js");
+const { createIssue, getIssue, getIssueById, getIssueByParentId, getIssueDetails } = require("./controllers/issueController.js");
 const { createLabel, getLabel, getLabelByLabelName } = require("./controllers/labelController.js");
 const { createIssueLabel, getIssueLabel, getIssueLabelByIssueId } = require("./controllers/issueLabelController.js");
 const { createIssueHistory, getIssueHistory, getIssueHistoryByIssueId } = require("./controllers/issueHistoryController.js");
@@ -21,23 +21,26 @@ router.get("/getuserbyrole/:role", getUserByRole);
 router.post("/login", login);
 
 // Project Controller
-router.post("/project", upload.single('image'), createProject);
+router.post("/project", upload.single('file'), createProject);
 router.post("/project", createProject);
 router.get("/getproject", getProject);
 router.get("/getprojectbyid/:projectId", getProjectById);
+router.get("/getrecentprojects", getLatestProjects);
 
 // ProjectMember Controller
 router.post("/projectmember", createProjectMember);
 router.get("/getprojectmember", getProjectMember);
 router.get("/getprojectmemberbyprojectid/:projectId", getMembersByProjectId);
-router.get("/getprojectmemberbyuserid", getMembersByUserId);
-router.get("/getprojectmemberbyuserrole", getMembersByUserRole);
+router.get("/getprojectmemberbyuserid/:userId", getMembersByUserId);
+router.get("/getprojectmemberbyuserrole/:role", getMembersByUserRole);
+router.get("/getcollaboraters/:userId", getCollaboraters);
 
 // Issue Controller
 router.post("/issue", upload.array('files', 10), createIssue);
 router.get("/getissue", getIssue );
 router.get("/getissuebyid/:issueId", getIssueById);
 router.get("/getissuebyparentid/:parentIssueId", getIssueByParentId);
+router.get("/getissuebyissueid/:issueId/:assigneeUserId", getIssueDetails);
 
 // Label Controller
 router.post("/label", createLabel);

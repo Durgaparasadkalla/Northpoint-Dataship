@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 const routes = require('./routes');
-const db = require("./models");
+const db = require('./models');
 const fs = require('fs');
 const path = require('path');
+// const Issue = require('./models/issue');
+// const Attachment = require('./models/attachment');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -11,7 +13,15 @@ const PORT = process.env.PORT || 8080;
 // // Enable CORS for all origins
 // app.use(cors());
 
-// Or enable CORS for specific origins
+// // Or enable CORS for specific origins
+// var corsOptions = { origin: "http://localhost:8081" };
+// app.use(cors(corsOptions));
+
+
+// // Add to the database object
+// db.Issue = Issue;
+// db.Attachment = Attachment;
+
 db.sequelize.sync({ alter: true })
   .then(() => {
     console.log("Synced db.");
@@ -20,8 +30,6 @@ db.sequelize.sync({ alter: true })
     console.log("Failed to sync db: " + err.message);
   });
 
-// var corsOptions = { origin: "http://localhost:8081" };
-// app.use(cors(corsOptions));
 
 app.use(cors());
 app.use(express.json());  // parse requests of content-type - application/json

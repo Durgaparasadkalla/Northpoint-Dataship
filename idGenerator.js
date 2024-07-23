@@ -11,6 +11,7 @@ function formatDate(date) {
 const rolePrefixes = {
     Admin: 'AD',
     'Project Manager': 'PM',
+    'Project Lead': 'PL',
     User: 'USR'
 };
 

@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
     image: { type: Sequelize.STRING },
     summary: { type: Sequelize.STRING },
     description: { type: Sequelize.STRING },
-    leadUserId: { type: Sequelize.STRING, references: { model: 'User', key: 'userId' }, allowNull: true }
+    leadUserId: { type: Sequelize.STRING, references: { model: 'User', key: 'userId' } }
   });
 
   return Project;

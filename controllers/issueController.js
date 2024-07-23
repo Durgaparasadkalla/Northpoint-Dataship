@@ -1,6 +1,10 @@
 const db = require('../models');
 const Issue = db.Issue;
 const Attachment = db.Attachment;
+const Project = db.Project;
+const User = db.User;
+const ProjectMember = db.ProjectMember;
+const {Op} = require('sequelize');
 const { generateIssueId, generateAttachmentId } = require('../idGenerator');
 const { v4: uuidv4 } = require('uuid');
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
@@ -170,8 +174,64 @@ const getIssueByParentId = async (req, res) => {
         message: err.message || "Some error occurred while fetching the issues."
       });
     }
-  };
+};
+
+
+//////////////////// Working ////////////////////
+// get overall issue details
+const getIssueDetails = async (req, res) => {
+    try {
+        const { issueId, assigneeUserId } = req.params;
+
+        // Fetch issue details
+        const issuedetails = await Issue.findOne({
+            where: { issueId },
+            attributes: ['issueId', 'priority', 'issueType', 'title', 'status', 'projectId', 'assigneeUserId']
+        });
+
+        if (!issuedetails) {
+            return res.status(404).json({ message: 'Data not found' });
+        }
+
+        const projectId = issuedetails.projectId;
+
+        // Fetch project details
+        const projectdetails = await Project.findOne({
+            where: { projectId },
+            attributes: ['projectName']
+        });
+
+        // Fetch project members excluding the assignee user and only those related to the particular project
+        const projectmembers = await ProjectMember.findAll({
+            where: {
+                projectId: projectId,
+                userId: { [Op.ne]: assigneeUserId }
+            },
+            include: {
+                model: User,
+                attributes: ['firstName', 'lastName']
+            }
+        });
+
+        // Combine first and last names into key-value pairs
+        const memberNames = projectmembers.reduce((acc, pm) => {
+            const key = `${pm.User.firstName} ${pm.User.lastName}`;
+            acc[key] = key;
+            return acc;
+        }, {});
+
+        return res.status(200).json({
+            issueDetails: issuedetails.toJSON(),
+            projectDetails: projectdetails.toJSON(),
+            memberNames,
+            message: 'Issue details fetched successfully'
+        });
+    } catch (error) {
+        return res.status(500).json({ message: error.message || "Some error occurred while fetching" });
+    }
+};
+
   
 
 
-module.exports = { createIssue, getIssue, getIssueById, getIssueByParentId };
+module.exports = { createIssue, getIssue, getIssueById, getIssueByParentId, getIssueDetails };

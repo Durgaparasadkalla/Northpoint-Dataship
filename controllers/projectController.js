@@ -107,6 +107,21 @@ const getProjectById = async( req, res ) => {
     }
 };
 
+// get Recent Projects
+const getLatestProjects = async(req, res) => {
+    try{
+        const projectData = await Project.findAll({ limit: 3, order:[['createdAt', 'DESC']] });
+        if (!projectData) {
+            return res.status(400).json({ message: "Data not found" });
+            }
+        return res.status(200).json(projectData);
+    }catch (err) {
+        res.status(500).json({
+            message: err.message || "Some error occurred while fetching the Project details."   
+        });
+    }
+};
 
 
-module.exports = { createProject, getProject, getProjectById };
+
+module.exports = { createProject, getProject, getProjectById, getLatestProjects };
