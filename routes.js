@@ -22,7 +22,6 @@ router.post("/login", login);
 
 // Project Controller
 router.post("/project", upload.single('file'), createProject);
-router.post("/project", createProject);
 router.get("/getproject", getProject);
 router.get("/getprojectbyid/:projectId", getProjectById);
 router.get("/getrecentprojects", getLatestProjects);

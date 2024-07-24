@@ -97,28 +97,42 @@ const createIssue = async( req, res ) => {
 };
 
 // get Issue data
-const getIssue = async( req, res ) => {
-    try{
-        const issues = await Issue.findAll();
-        if(!issues) {
-            return res.status(404).json({ message: 'Issue data not found.' });
-        }
-        return res.status(200).json({
-            issueData: issues,
-            message: 'Issue data fetched successfully'
-        })
+const getIssue = async (req, res) => {
+    try {
+      const issues = await Issue.findAll({
+        include: {
+          model: Attachment,
+          attributes: ['attachmentUrl'], // Specify the fields you want to include
+        },
+      });
+  
+      if (!issues.length) {
+        return res.status(404).json({ message: 'Issue data not found.' });
+      }
+  
+      return res.status(200).json({
+        issueData: issues,
+        message: 'Issue data fetched successfully',
+      });
     } catch (err) {
-        return res.status(500).json({
-            message: err.message || "Some error occurred while fetching Issues."
-        })
+      return res.status(500).json({
+        message: err.message || "Some error occurred while fetching Issues.",
+      });
     }
-};
+  };
+  
 
 // get Issue data by Id
 const getIssueById = async( req, res ) => {
     try{
         const { issueId } = req.params;
-        const issues = await Issue.findOne({ where: {issueId} });
+        const issues = await Issue.findAll({
+            where: {issueId},
+            include: {
+              model: Attachment,
+              attributes: ['attachmentUrl'], // Specify the fields you want to include
+            },
+          });
         if(!issues) {
             return res.status(404).json({ message: 'Issue data not found.' });
         }
@@ -140,12 +154,20 @@ const getIssueByParentId = async (req, res) => {
   
       // Fetch parent issue
       const parentIssue = await Issue.findOne({
-        where: { issueId: parentIssueId }
+        where: { issueId: parentIssueId },
+        include: {
+            model: Attachment,
+            attributes: ['attachmentUrl'], 
+        }
       });
   
       // Fetch child issues
       const childIssues = await Issue.findAll({
-        where: { parentIssueId: parentIssueId }
+        where: { parentIssueId: parentIssueId },
+        include: {
+            model: Attachment,
+            attributes: ['attachmentUrl'], 
+        }
       });
   
       // Check if parent issue exists
