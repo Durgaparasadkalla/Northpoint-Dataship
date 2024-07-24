@@ -214,15 +214,28 @@ const getIssueDetails = async (req, res) => {
         });
 
         // Combine first and last names into key-value pairs
-        const memberNames = projectmembers.reduce((acc, pm) => {
-            const key = `${pm.User.firstName} ${pm.User.lastName}`;
-            acc[key] = key;
-            return acc;
-        }, {});
+        const memberNames = [...new Set(projectmembers.map(pm => `${pm.User.firstName} ${pm.User.lastName}`))];
+
+        // Fetch Attachments related to the Issue Id
+        const attachments = await Attachment.findAll({
+            where: { issueId: issueId },
+            attributes: ['fileName', 'attachmentUrl']
+        });
+
+        // // Fetch Issue History related to the Issue Id
+        // const issueHistory = await IssueHistory.findAll({
+        //     where: { issueId: issueId },
+        //     attributes: ['issueHistory', 'issueHistoryDate', 'userId'],
+        //         include: {
+        //             model: User,
+        //             attributes: ['firstName', 'lastName']
+        //             }
+        // });                                    
 
         return res.status(200).json({
-            issueDetails: issuedetails.toJSON(),
-            projectDetails: projectdetails.toJSON(),
+            issuedetails,
+            attachments,
+            projectdetails,
             memberNames,
             message: 'Issue details fetched successfully'
         });

@@ -7,12 +7,19 @@ function formatDate(date) {
     return `${mm}${dd}${yy}`;
 }
 
+// // Mapping roles to custom prefixes
+// const rolePrefixes = {
+//     Admin: 'AD',
+//     'Project Manager': 'PM',
+//     'Project Lead': 'PL',
+//     User: 'USR'
+// };
+
 // Mapping roles to custom prefixes
 const rolePrefixes = {
-    Admin: 'AD',
-    'Project Manager': 'PM',
-    'Project Lead': 'PL',
-    User: 'USR'
+    'role1': 'R1',
+    'role2': 'R2',
+    'role3': 'R3'
 };
 
 // Initialize a global counter
